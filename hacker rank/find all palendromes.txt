@@ -1,0 +1,64 @@
+
+    private Map<String,Boolean> memo = new HashMap();
+    private int recurseCounter = 0;
+
+    // Complete the substrCount function below.
+    public long substrCount(String s) {
+        
+         magicRecursion(s, 0, s.length());
+
+        int count = recurseCounter;
+        recurseCounter = 0;
+        return count;
+
+
+    }
+
+    private boolean  magicRecursion(String s, int begin, int end){
+
+        String key = begin +"-"+end;
+        boolean leftSub = false;
+        boolean rightSub = false;
+        boolean centerSub = false;  
+        if(memo.containsKey(key)){
+            return memo.get(key);
+        }
+
+        if(end - begin ==2){
+            magicRecursion(s, begin, end-1);
+            magicRecursion(s, begin+1, end);
+            if(s.charAt(begin) != s.charAt(begin+1)){
+            memo.put(key, false);
+                return false;
+            }
+            memo.put(key, true);
+
+            recurseCounter++;
+            return true;
+        }
+
+        if(end - begin ==1){
+            memo.put(key, true);
+            recurseCounter++;
+
+            return true;
+        }
+      
+
+        magicRecursion(s, begin, end-1);
+        magicRecursion(s, begin+1, end);
+        centerSub = magicRecursion(s, begin+1, end-1);
+
+        if(centerSub && s.charAt(begin) == s.charAt(end-1)){
+            memo.put(key, true);
+            recurseCounter++;
+
+            return true;
+        }
+        
+       
+
+        
+
+        return false;
+    }
